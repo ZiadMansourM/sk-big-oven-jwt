@@ -1,0 +1,29 @@
+name: Docker Images Build & Push to DockerHub
+
+on: push
+
+jobs:
+  publish-image:
+    name: Publish Docker image
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - dockerfile: Frontend/Dockerfile
+            repository: ziadmmh/bigoven-frontend
+          - dockerfile: Backend/Dockerfile
+            repository: ziadmmh/bigoven-backend
+          - dockerfile: reverseproxy/Dockerfile
+            repository: ziadmmh/bigoven-reverseproxy
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Publish image to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          context: .
+          dockerfile: ${{ matrix.dockerfile }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ matrix.repository }}
+          tags: latest, ${{ github.run_number }}

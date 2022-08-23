@@ -1,0 +1,140 @@
+﻿/* Base structure */
+body {
+    text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+    box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+}
+
+.container {
+    max-width: 672px !important;
+}
+
+/* Custom default button */
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus {
+    color: #333;
+    text-shadow: none; /* Prevent inheritance from `body` */
+}
+
+/* Header */
+.nav-masthead .nav-link {
+    padding: .25rem 0;
+    font-weight: 700;
+    color: rgba(255, 255, 255, .5);
+    background-color: transparent;
+    border-bottom: .25rem solid transparent;
+}
+
+    .nav-masthead .nav-link:hover,
+    .nav-masthead .nav-link:focus {
+        border-bottom-color: rgba(255, 255, 255, .25);
+    }
+
+    .nav-masthead .nav-link + .nav-link {
+        margin-left: 1rem;
+    }
+
+.nav-masthead .active {
+    color: #fff;
+    border-bottom-color: #fff;
+}
+/* Project Specific */
+.link {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.custom-model .modal-content {
+    background-color: hsl(218, 41%, 15%);
+    border: 3px solid rgb(232, 141, 14);
+}
+
+.custom-model .form-control {
+    background-color: hsl(218, 41%, 15%);
+    color: white;
+}
+
+.custom-model .form-control:focus {
+    background-color: hsl(218, 41%, 15%);
+    color: white;
+}
+
+input:autofill {
+    background-color: hsl(218, 41%, 15%);
+    color: white;
+}
+
+input:-webkit-autofill {
+    background-color: hsl(218, 41%, 15%);
+    color: white;
+}
+
+/* Fix Floating Input */
+.custom-form-floating {
+    position: relative;
+    padding-bottom: 13px;
+}
+
+.custom-form-floating:before {
+    content: '';
+    position: absolute;
+    top: 1px; /* border-width (default by BS) */
+    left: 1px; /* border-width (default by BS) */
+    /*width: calc(100% - 14px);*/ /* to show scrollbar */
+    height: 32px;
+    border-radius: 4px; /* (default by BS) */
+    background-color: #212529;
+}
+
+.custom-form-floating textarea.form-control {
+    padding-top: 30px; /* height of pseudo element 32 px */
+    /*min-height: 80px;*/ /* not relevant */
+}
+
+.alert-danger {
+    color: rgb(232, 141, 14);
+    background-color: #f8d7da;
+    border: 2px solid transparent;
+    border-color: #80000d; /*#f5c2c7;*/
+}
+
+.btn-alert-cls {
+    color: #FFF !important;
+}
+
+.btn-alert-cls:hover {
+    cursor: pointer;
+    color: #FFF !important;
+    text-decoration: none;
+}
+
+.table {
+    table-layout: fixed;
+}
+
+th.ellipses {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+td {
+    width: 80px;
+    color: rgb(232, 141, 14);
+}
+
+td.ellipses {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+td a {
+    text-decoration: none;
+    color: rgb(232, 141, 14);
+}
+
+td a:hover {
+    text-decoration: none;
+    color: rgb(232, 141, 14);
+}

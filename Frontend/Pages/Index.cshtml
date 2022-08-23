@@ -1,0 +1,393 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section x-show="open=='home'" x-cloak id="home">
+    <h1>Welcome to BigOven ^^</h1>
+    <p class="lead">Find and share everyday cooking inspiration on BigOven. Discover recipes, cooks, videos, and how-tos based on the food you love.</p>
+    <p class="lead">
+        <a href="https://github.com/ZiadMansourM/sk-big-oven-razor" class="btn btn-lg btn-secondary fw-bold border-white bg-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-github mb-1" viewBox="0 0 16 16">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+        </a>
+    </p>
+</section>
+
+<section x-show="open=='recipes'" x-cloak id="recipes">
+    <div class="row">
+        <div class="col">
+            <h2 class="text-start ps-4">Recipes</h2>
+        </div>
+        <div class="col text-end">
+            <button class="btn text-white" data-bs-toggle="modal" data-bs-target="#createRecipeModel">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>
+                Add New
+            </button>
+        </div>
+    </div>
+    <hr />
+    <br />
+    <div class="table-responsive">
+        <table class="table text-white">
+            <thead>
+                <tr class="d-flex">
+                    <th class="col-1" scope="col">#</th>
+                    <th class="col-6 col-md-8 col-lg-8" scope="col">Name</th>
+                    <th class="col-5 col-md-3 col-lg-3" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="(recipe, index) in recipes" :key="recipe.id">
+                    <tr class="d-flex">
+                        <th class="col-1" scope="row"><span x-text="index+1"></span></th>
+                        <td class="col-6 col-md-8 col-lg-8 ellipses"><a x-on:click="initActiveRecipe(recipe)" data-bs-toggle="modal" data-bs-target="#detailRecipeModel"><span x-text="recipe.name"></span></a></td>
+                        <td class="col-5 col-md-3 col-lg-3">
+                            <button x-on:click="initActiveRecipe(recipe)" class="btn btn-link link" data-bs-toggle="modal" data-bs-target="#updateRecipeModel">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                </svg>
+                            </button>
+                            <button x-on:click="initActiveRecipe(recipe)" data-bs-toggle="modal" data-bs-target="#deleteRecipeModel"  class="btn btn-link link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-trash3" viewBox="0 0 16 16">
+                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" />
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+    <!-- Delete Modal -->
+    <div class="modal fade custom-model" id="deleteRecipeModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteRecipeModel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form asp-page-handler="delete" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteRecipeModel">Delete Recipe</h5>
+                        <button type="button" x-on:click="cleanActiveCategory" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h3>Confirm deleteing "<span x-text="activeRecipe.name"></span>" 👀?</h3>
+                        <p class="text-danger">This can't be undone!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" x-on:click="cleanActiveCategory" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
+                        <button type="button" x-on:click="deleteRecipe" data-bs-dismiss="modal" class="btn btn-danger fw-bold border-white">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Detail Modal -->
+    <div class="modal fade custom-model" id="detailRecipeModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailRecipeModel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailRecipeModel">Recipe Details</h5>
+                    <button type="button" x-on:click="cleanActiveRecipe" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput" :value="activeRecipe.name" readonly>
+                                <label for="floatingInput">Recipe Name</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput" :value="activeRecipe.id" readonly>
+                                <label for="floatingInput">Recipe Guid</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating custom-form-floating">
+                        <textarea class="form-control h-100" x-text="activeRecipe.ingredients" :rows="activeRecipe.ingredientsLength" id="floatingTextarea2" readonly>
+                        </textarea>
+                        <label for="floatingTextarea2">Ingredients</label>
+                    </div>
+                    <div class="form-floating custom-form-floating">
+                        <textarea class="form-control h-100" x-text="activeRecipe.instructions" :rows="activeRecipe.instructionsLength" id="floatingTextarea2" readonly>
+                        </textarea>
+                        <label for="floatingTextarea2">Instructions</label>
+                    </div>
+                    <div class="form-floating custom-form-floating">
+                        <textarea class="form-control h-100" x-text="activeRecipe.strCategoriesNames" :rows="activeRecipe.categoriesIdsLength" id="floatingTextarea2" readonly>
+                        </textarea>
+                        <label for="floatingTextarea2">Categories</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button x-on:click="cleanActiveRecipe" type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Great</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Update Modal -->
+    <div class="modal fade custom-model" id="updateRecipeModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateRecipeModel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateRecipeModel">Recipe Update</h5>
+                    <button type="button" x-on:click="cleanActiveRecipe" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput" x-model="activeRecipe.name">
+                                <label for="floatingInput">Recipe Name</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput" :value="activeRecipe.id" readonly>
+                                <label for="floatingInput">Recipe Guid</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating custom-form-floating">
+                        <textarea class="form-control h-100" x-model="activeRecipe.ingredients" :rows="activeRecipe.ingredientsLength" id="floatingTextarea2">
+                        </textarea>
+                        <label for="floatingTextarea2">Ingredients</label>
+                    </div>
+                    <div class="form-floating custom-form-floating">
+                        <textarea class="form-control h-100" x-model="activeRecipe.instructions" :rows="activeRecipe.instructionsLength" id="floatingTextarea2">
+                        </textarea>
+                        <label for="floatingTextarea2">Instructions</label>
+                    </div>
+                    <template x-for="cat in categories">
+                        <div class="form-check form-switch text-start">
+                            <input 
+                                class="form-check-input" 
+                                x-model="activeRecipe.categoriesIds"
+                                :value="cat.id"
+                                type="checkbox"
+                            >
+                            <label class="form-check-label" x-text="cat.name"></label>
+                        </div>
+                    </template>
+                </div>
+                <div class="modal-footer">
+                    <button x-on:click="cleanActiveRecipe" type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
+                    <button x-on:click="updateRecipe" data-bs-dismiss="modal" type="button" class="btn btn-success fw-bold border-white">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Create Modal -->
+    <div class="modal fade custom-model" id="createRecipeModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createRecipeModel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createRecipeModel">Recipe Create</h5>
+                    <button type="button" x-on:click="cleanActiveRecipe" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" x-model="activeRecipe.name">
+                            <label for="floatingInput">Recipe Name</label>
+                        </div>
+                    </div>
+                    <div class="form-floating custom-form-floating">
+                        <textarea class="form-control h-100" x-model="activeRecipe.ingredients" :rows="activeRecipe.ingredientsLength" id="floatingTextarea2">
+                        </textarea>
+                        <label for="floatingTextarea2">Ingredients</label>
+                    </div>
+                    <div class="form-floating custom-form-floating">
+                        <textarea class="form-control h-100" x-model="activeRecipe.instructions" :rows="activeRecipe.instructionsLength" id="floatingTextarea2">
+                        </textarea>
+                        <label for="floatingTextarea2">Instructions</label>
+                    </div>
+                    <template x-for="cat in categories">
+                        <div class="form-check form-switch text-start">
+                            <input 
+                                class="form-check-input" 
+                                x-model="activeRecipe.categoriesIds"
+                                :value="cat.id"
+                                type="checkbox"
+                            >
+                            <label class="form-check-label" x-text="cat.name"></label>
+                        </div>
+                    </template>
+                </div>
+                <div class="modal-footer">
+                    <button x-on:click="cleanActiveRecipe" type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
+                    <button x-on:click="createRecipe" data-bs-dismiss="modal" type="button" class="btn btn-success fw-bold border-white">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section x-show="open=='categories'" x-cloak id="categories">
+    <div class="row">
+        <div class="col">
+            <h2 class="text-start ps-4">Categories</h2>
+        </div>
+        <div class="col text-end">
+            <button class="btn text-white" data-bs-toggle="modal" data-bs-target="#createCategory">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>
+                Add New
+            </button>
+        </div>
+    </div>
+    <hr />
+    <br />
+    <div class="table-responsive">
+        <table class="table text-white">
+            <thead>
+                <tr class="d-flex">
+                    <th class="col-1" scope="col">#</th>
+                    <th class="col-6 col-md-8 col-lg-8" scope="col">Name</th>
+                    <th class="col-5 col-md-3 col-lg-3" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="(category, index) in categories" :key="category.id">
+                    <tr class="d-flex">
+                        <th class="col-1" scope="row"><span x-text="index+1"></span></th>
+                        <td class="col-6 col-md-8 col-lg-8 ellipses"><a x-on:click="initActiveCategory(category)" data-bs-toggle="modal" data-bs-target="#detailCategoryModel"><span x-text="category.name"></span></a></td>
+                        <td class="col-5 col-md-3 col-lg-3">
+                            <button x-on:click="initActiveCategory(category)" class="btn btn-link link" data-bs-toggle="modal" data-bs-target="#updateCategoryModel">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
+                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                </svg>
+                            </button>
+                            <button x-on:click="initActiveCategory(category)" data-bs-toggle="modal" data-bs-target="#deleteCategoryModel"  class="btn btn-link link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-trash3" viewBox="0 0 16 16">
+                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" />
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+    <!-- Detail Modal -->
+    <div class="modal fade custom-model" id="detailCategoryModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="detailCategoryModel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailCategoryModel">Category Details</h5>
+                    <button x-on:click="cleanActiveCategory" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" :value="activeCategory.id" readonly>
+                        <label for="floatingInput">Category Guid</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" :value="activeCategory.name" readonly>
+                        <label for="floatingInput">Category Name</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button x-on:click="cleanActiveCategory" type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Great</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Update Modal -->
+    <div class="modal fade custom-model" id="updateCategoryModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateCategoryModel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form asp-page-handler="update" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateCategoryModel">Update Category</h5>
+                        <button x-on:click="cleanActiveCategory" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" :value="activeCategory.id" readonly>
+                            <label for="floatingInput">Category Guid</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" name="categoryName" class="form-control" x-model="activeCategory.name" id="floatingInput" placeholder="Egyptian Food">
+                            <label for="floatingInput">New Category Name</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button x-on:click="cleanActiveCategory" type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
+                        <button x-on:click="updateCategory" data-bs-dismiss="modal" type="button" class="btn btn-success fw-bold border-white">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Modal -->
+    <div class="modal fade custom-model" id="deleteCategoryModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteCategoryModel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form asp-page-handler="delete" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteCategoryModel">Delete Category</h5>
+                        <button type="button" x-on:click="cleanActiveCategory" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h3>Confirm deleteing "<span x-text="activeCategory.name"></span>" 👀?</h3>
+                        <p class="text-danger">This can't be undone!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" x-on:click="cleanActiveCategory" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
+                        <button type="button" x-on:click="deleteCategory" data-bs-dismiss="modal" class="btn btn-danger fw-bold border-white">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Create Modal -->
+    <div class="modal fade custom-model" id="createCategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createCategoryLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createCategoryLabel">Create Category</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" x-model="activeCategory.name" name="categoryName" class="form-control" id="floatingInput" placeholder="Egyptian Food">
+                        <label for="floatingInput">Category Name</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
+                    <button type="button" x-on:click="createCategories" data-bs-dismiss="modal" class="btn btn-success fw-bold border-white">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Policy -->
+    <div class="modal fade custom-model" id="categoryPolcy" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="categoryPolcy" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryPolcy">Category Know-How</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" value="Must not be empty." class="form-control" id="floatingInput" placeholder="Egyptian Food" readonly>
+                        <label for="floatingInput">Category Name</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success fw-bold border-white" data-bs-dismiss="modal">Understood</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
