@@ -1,4 +1,5 @@
-﻿namespace Backend.Models;
+﻿using FluentValidation;
+namespace Backend.Models;
 
 public class Category
 {
@@ -14,5 +15,13 @@ public class Category
     public List<Category> ToList()
     {
         return new List<Category> { this };
+    }
+}
+
+public class CategoryValidator : AbstractValidator<Category>
+{
+    public CategoryValidator()
+    {
+        RuleFor(category => category.Name).NotEmpty();
     }
 }

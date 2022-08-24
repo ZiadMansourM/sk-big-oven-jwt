@@ -1,4 +1,6 @@
-﻿using FluentValidation.Results;
+﻿using Backend.Models;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,9 +45,10 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseCors("AnyOrigin");
 
+Authentication.Router(app);
+Category.Router(app);
 Main.Router(app);
 Recipe.Router(app);
-Category.Router(app);
 
 app.Run();
 
@@ -68,9 +71,104 @@ public static class Main
     }
 }
 
+public static class Authentication
+{
+    private static readonly Backend.Services.JsonService _service = new(
+        Program.config["UsersPath"],
+        Program.config["RecipesPath"],
+        Program.config["CategoriesPath"]
+    );
+
+    public static void Router(IEndpointRouteBuilder router)
+    {
+        router.MapPost("/register", RegisterUser);
+        router.MapPost("/login", UserLogin);
+        router.MapGet("/users", ListUsers);
+        router.MapGet("/users/{id:guid}", GetUser);
+        //router.MapPut("/users/{id:guid}", UpdateUser);
+        router.MapDelete("/users/{id:guid}", DeleteUser);
+    }
+
+    private static IResult ListUsers()
+    {
+        return Results.Json(_service.ListUsers(), statusCode: 200);
+    }
+
+    private static IResult GetUser(Guid id)
+    {
+        return Results.Json(_service.GetUser(id), statusCode: 200);
+    }
+
+    private static IResult RegisterUser([FromBody] Backend.Models.UserDTO user)
+    {
+        bool valid = (
+            !string.IsNullOrEmpty(user.Username) &&
+            !string.IsNullOrEmpty(user.Password) &&
+            !_service.ListUsers().Any(u => u.Username == user.Username)
+        );
+        if (valid)
+        {
+            return Results.Json(
+                _service.Register(user),
+                statusCode: 200
+            );
+        }
+        else
+        {
+            List<string> msgs = new();
+            msgs.Add(
+                $"Username and Password can't be Empty, or this Username is taken!"
+            );
+            return Results.Json(
+                msgs,
+                statusCode: 400
+            );
+        }
+    }
+
+    //private static IResult UpdateUser([FromBody] Backend.Models.User user)
+    //{
+    //    return Results.Json(_service.UpdateUser(user.Id, user.Username, ), statusCode: 200);
+    //}
+
+    private static IResult DeleteUser(Guid id)
+    {
+        _service.DeleteUser(id);
+        return Results.Json("Deleted Successfully",statusCode: 200);
+    }
+
+    private static IResult UserLogin([FromBody] Backend.Models.UserDTO user)
+    {
+        bool valid = _service.ListUsers().Any(
+            u => u.Username==user.Username &&
+            u.VerifyPassword(user.Password)
+        );
+        if (valid)
+        {
+            return Results.Json(
+                _service.GetTocken(user),
+                statusCode: 200
+            );
+        }
+        else
+        {
+            List<string> msgs = new();
+            msgs.Add(
+                $"Invalid username or password!"
+            );
+            return Results.Json(
+                msgs,
+                statusCode: 400
+            );
+        }
+    }
+}
+
+
 public static class Recipe
 {
     private static readonly Backend.Services.JsonService _service = new(
+        Program.config["UsersPath"],
         Program.config["RecipesPath"],
         Program.config["CategoriesPath"]
     );
@@ -179,6 +277,7 @@ public static class Recipe
 public static class Category
 {
     private static readonly Backend.Services.JsonService _service = new(
+        Program.config["UsersPath"],
         Program.config["RecipesPath"],
         Program.config["CategoriesPath"]
     );
