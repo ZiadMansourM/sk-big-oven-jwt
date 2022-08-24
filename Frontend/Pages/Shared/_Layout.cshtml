@@ -57,7 +57,7 @@
                     <li class="nav-item">
                         <a 
                             class="nav-link"
-                            x-on:click="open='home'"
+                            x-on:click="open='home'; errMsgs=[]"
                             x-bind:class="open=='home'?'active':''"
                         >
                             Home
@@ -66,7 +66,7 @@
                     <li class="nav-item">
                         <a 
                             class="nav-link"
-                            x-on:click="open='recipes'"
+                            x-on:click="open='recipes'; errMsgs=[]"
                             x-bind:class="open=='recipes'?'active':''"
                         >
                             Recipes
@@ -75,7 +75,7 @@
                     <li class="nav-item">
                         <a 
                             class="nav-link"
-                            x-on:click="open='categories'"
+                            x-on:click="open='categories'; errMsgs=[]"
                             x-bind:class="open=='categories'?'active':''"
                         >
                             Categories
@@ -110,11 +110,11 @@
                     activeCategory: { id: '', name: '' },
                     recipes: [],
                     activeRecipe: { 
-                        id: '', name: '', ingredients: [], instructions: [], categoriesIds: [],
+                        id: '', name: '', ingredients: "", instructions: "", categoriesIds: [],
                         strCategoriesNames: '', ingredientsLength: '', instructionsLength: '',
                         categoriesIdsLength: ''
                     },
-                    sendRecipe: { id: '', name: '', ingredients: [], instructions: [], categoriesIds: [] },
+                    sendRecipe: { id: '', name: '', ingredients: "", instructions: "", categoriesIds: [] },
                     catNameGuid: {},
                     catGuidName: {},
                     async loadCategories() {
@@ -268,7 +268,7 @@
                     },
                     cleanActiveRecipe() { 
                         this.activeRecipe={ 
-                            id: '', name: '', ingredients: [], instructions: [], categoriesIds: [],
+                            id: '', name: '', ingredients: "", instructions: "", categoriesIds: [],
                             strCategoriesNames: '', ingredientsLength: '', instructionsLength: '',
                             categoriesIdsLength: ''
                         }

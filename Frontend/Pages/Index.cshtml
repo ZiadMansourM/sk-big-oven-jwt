@@ -18,6 +18,12 @@
 </section>
 
 <section x-show="open=='recipes'" x-cloak id="recipes">
+    <template x-for="(msg, index) in errMsgs" :key="index">
+        <div class="alert alert-danger-custom shadow p-3 mb-4 bg-body-custom rounded" role="alert">
+            <a x-text="msg" class="btn-alert-cls link" data-bs-toggle="modal" data-bs-target="#recipePolcy">
+            </a>
+        </div>
+    </template>
     <div class="row">
         <div class="col">
             <h2 class="text-start ps-4">Recipes</h2>
@@ -230,6 +236,12 @@
 </section>
 
 <section x-show="open=='categories'" x-cloak id="categories">
+    <template x-for="(msg, index) in errMsgs" :key="index">
+        <div class="alert alert-danger-custom shadow p-3 mb-4 bg-body-custom rounded" role="alert">
+            <a x-text="msg" class="btn-alert-cls link" data-bs-toggle="modal" data-bs-target="#categoryPolcy">
+            </a>
+        </div>
+    </template>
     <div class="row">
         <div class="col">
             <h2 class="text-start ps-4">Categories</h2>

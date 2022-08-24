@@ -138,3 +138,14 @@ td a:hover {
     text-decoration: none;
     color: rgb(232, 141, 14);
 }
+
+.bg-body-custom {
+    background-color: hsl(218, 41%, 15%) !important;
+}
+
+.alert-danger-custom {
+    color: rgb(232, 141, 14);
+    background-color: #f8d7da;
+    border: 2px solid transparent;
+    border-color: rgba(255,255,255,0.3);
+}
