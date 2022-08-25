@@ -2,9 +2,29 @@
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 // ConfigureServices
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes("010242dabe0ae1e9c8ab6c0f219ae887c0ca0a1d16847b889330f9b4fb261c9c")
+            ),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    }
+);
+
+builder.Services.AddAuthorization();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AnyOrigin", builder =>
@@ -44,6 +64,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 app.UseCors("AnyOrigin");
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 Authentication.Router(app);
 Category.Router(app);
@@ -89,6 +113,7 @@ public static class Authentication
         router.MapDelete("/users/{id:guid}", DeleteUser);
     }
 
+    [Authorize]
     private static IResult ListUsers()
     {
         return Results.Json(_service.ListUsers(), statusCode: 200);
