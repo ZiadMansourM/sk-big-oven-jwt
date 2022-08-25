@@ -17,7 +17,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes("010242dabe0ae1e9c8ab6c0f219ae887c0ca0a1d16847b889330f9b4fb261c9c")
+                .GetBytes(Program.config["SECRET_KEY"])
             ),
             ValidateIssuer = false,
             ValidateAudience = false
@@ -131,6 +131,7 @@ public static class Authentication
         return Results.Json(_service.ListUsers(), statusCode: 200);
     }
 
+    [Authorize]
     private static IResult GetUser(Guid id)
     {
         return Results.Json(_service.GetUser(id), statusCode: 200);
@@ -163,11 +164,13 @@ public static class Authentication
         }
     }
 
+    //[Authorize]
     //private static IResult UpdateUser([FromBody] Backend.Models.User user)
     //{
     //    return Results.Json(_service.UpdateUser(user.Id, user.Username, ), statusCode: 200);
     //}
 
+    [Authorize]
     private static IResult DeleteUser(Guid id)
     {
         _service.DeleteUser(id);
@@ -219,11 +222,13 @@ public static class Recipe
         router.MapDelete("/recipes/{id:guid}", DeleteRecipe);
     }
 
+    [Authorize]
     private static IResult ListRecipes()
     {
         return Results.Json(_service.ListRecipes(), statusCode: 200);
     }
 
+    [Authorize]
     private static IResult CreateRecipe([FromBody] Backend.Models.Recipe recipe)
     {
         Backend.Models.RecipeValidator validator = new();
@@ -261,11 +266,13 @@ public static class Recipe
         }
     }
 
+    [Authorize]
     private static IResult GetRecipe(Guid id)
     {
         return Results.Json(_service.GetRecipe(id), statusCode: 200);
     }
 
+    [Authorize]
     private static IResult UpdateRecipe(Guid id, [FromBody] Backend.Models.Recipe recipe)
     {
         Backend.Models.RecipeValidator validator = new();
@@ -304,6 +311,7 @@ public static class Recipe
         }
     }
 
+    [Authorize]
     private static IResult DeleteRecipe(Guid id)
     {
         _service.DeleteRecipe(id);
@@ -328,11 +336,13 @@ public static class Category
         router.MapDelete("/categories/{id:guid}", DeleteCategory);
     }
 
+    [Authorize]
     private static IResult ListCategories()
     {
         return Results.Json(_service.ListCategories(), statusCode: 200);
     }
 
+    [Authorize]
     private static IResult CreateCategory([FromBody] string name)
     {
         Backend.Models.CategoryValidator validator = new();
@@ -360,11 +370,13 @@ public static class Category
         }
     }
 
+    [Authorize]
     private static IResult GetCategory(Guid id)
     {
         return Results.Json(_service.GetCategory(id), statusCode: 200);
     }
 
+    [Authorize]
     private static IResult UpdateCategory(Guid id, [FromBody] Backend.Models.Category category)
     {
         Backend.Models.CategoryValidator validator = new();
@@ -395,6 +407,7 @@ public static class Category
         }
     }
 
+    [Authorize]
     private static IResult DeleteCategory(Guid id)
     {
         _service.DeleteCategory(id);

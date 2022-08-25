@@ -229,9 +229,7 @@ public class JsonService
 
         // SECRET_KEY will be stored safely later
         var key = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(
-                "010242dabe0ae1e9c8ab6c0f219ae887c0ca0a1d16847b889330f9b4fb261c9c"
-            )
+            System.Text.Encoding.UTF8.GetBytes(Program.config["SECRET_KEY"])
         );
 
         var creds = new Microsoft.IdentityModel.Tokens.SigningCredentials(
