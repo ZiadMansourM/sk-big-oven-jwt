@@ -17,6 +17,7 @@
     <None Remove="System.IdentityModel.Tokens.Jwt" />
     <None Remove="Microsoft.AspNetCore.Authorization" />
     <None Remove="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <None Remove="Swashbuckle.AspNetCore.Filters" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.2.0" />
@@ -25,6 +26,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.5" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
