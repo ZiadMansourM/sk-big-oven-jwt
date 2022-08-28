@@ -117,8 +117,13 @@
                     sendRecipe: { id: '', name: '', ingredients: "", instructions: "", categoriesIds: [] },
                     catNameGuid: {},
                     catGuidName: {},
+                    token: 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3RyaW5nIiwiZXhwIjoxNjYxNzg4OTU2fQ.T6dxTlBbLpVirUJQE0p0kkKzQ2QIuxDi6Zb3ZL7NQgH-OO9z_Y_yn2x6n8Gw6nkWwe3GXFr2SaDVdNFNxy8ZCg',
                     async loadCategories() {
-                        let response = await fetch(`${this.baseAddress}/categories`);
+                        let response = await fetch(`${this.baseAddress}/categories`, {
+                            headers: {
+                                'Authorization': 'bearer ' + this.token
+                            }
+                        });
                         if (!response.ok) {
                             const message = `An error has occured: ${response.status}`;
                             console.log(message);
@@ -135,7 +140,8 @@
                         let response = await fetch(`${this.baseAddress}/categories`, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': 'bearer ' + this.token
                             },
                             body: JSON.stringify(this.activeCategory.name)
                         });
@@ -156,7 +162,8 @@
                         let response = await fetch(`${this.baseAddress}/categories/${this.activeCategory.id}`, {
                             method: 'DELETE',
                             headers: { 
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': 'bearer ' + this.token
                             }
                         });
                         if (!response.ok) {
@@ -171,7 +178,8 @@
                         let response = await fetch(`${this.baseAddress}/categories/${this.activeCategory.id}`, {
                             method: 'PUT',
                             headers: { 
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': 'bearer ' + this.token
                             },
                             body: JSON.stringify(this.activeCategory)
                         });
@@ -189,7 +197,11 @@
                     },
                     cleanActiveCategory() { this.activeCategory={ id: '', name: '' } },
                     async loadRecipes() {
-                        let response = await fetch(`${this.baseAddress}/recipes`);
+                        let response = await fetch(`${this.baseAddress}/recipes`, {
+                            headers: {
+                                'Authorization': 'bearer ' + this.token
+                            }
+                        });
                         if (!response.ok) {
                             const message = `An error has occured: ${response.status}`;
                             console.log(message);
@@ -207,7 +219,8 @@
                         let response = await fetch(`${this.baseAddress}/recipes/${this.sendRecipe.id}`, {
                             method: 'PUT',
                             headers: { 
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': 'bearer ' + this.token
                             },
                             body: JSON.stringify(this.sendRecipe)
                         });
@@ -234,7 +247,8 @@
                         let response = await fetch(`${this.baseAddress}/recipes`, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': 'bearer ' + this.token
                             },
                             body: JSON.stringify(this.sendRecipe)
                         });
@@ -255,7 +269,8 @@
                         let response = await fetch(`${this.baseAddress}/recipes/${this.activeRecipe.id}`, {
                             method: 'DELETE',
                             headers: { 
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                'Authorization': 'bearer ' + this.token
                             }
                         });
                         if (!response.ok) {
