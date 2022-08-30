@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text.Json;
+using Backend.Models;
 
 namespace Backend.Services;
 
@@ -245,5 +247,27 @@ public class JsonService
 
         return new System.IdentityModel.Tokens.Jwt
             .JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public RefreshToken GenerateRefreshToken()
+    {
+        var refreshToken = new RefreshToken
+        {
+            Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+            Expires = DateTime.Now.AddDays(7),
+            Created = DateTime.Now
+        };
+        return refreshToken;
+    }
+
+    public void SetRefreshToken(RefreshToken newRefreshToken, UserDTO userInfo)
+    {
+        User user = ListUsers().Where(
+            u => u.Username == userInfo.Username
+        ).First();
+        user.RefreshToken = newRefreshToken.Token;
+        user.TokenCreated = newRefreshToken.Created;
+        user.TokenExpires = newRefreshToken.Expires;
+        // OverWrite
     }
 }

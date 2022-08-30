@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 // ConfigureServices
@@ -119,6 +120,7 @@ public static class Authentication
     {
         router.MapPost("/register", RegisterUser);
         router.MapPost("/login", UserLogin);
+        router.MapPost("/refresh", UserRefreshToken);
         router.MapGet("/users", ListUsers);
         router.MapGet("/users/{id:guid}", GetUser);
         //router.MapPut("/users/{id:guid}", UpdateUser);
@@ -133,6 +135,11 @@ public static class Authentication
 
     [Authorize]
     private static IResult GetUser(Guid id)
+    {
+        return Results.Json(_service.GetUser(id), statusCode: 200);
+    }
+
+    private static IResult UserRefreshToken(Guid id)
     {
         return Results.Json(_service.GetUser(id), statusCode: 200);
     }
@@ -177,7 +184,7 @@ public static class Authentication
         return Results.Json("Deleted Successfully",statusCode: 200);
     }
 
-    private static IResult UserLogin([FromBody] Backend.Models.UserDTO user)
+    private static IResult UserLogin([FromBody] Backend.Models.UserDTO user, Microsoft.AspNetCore.Http.HttpResponse response)
     {
         bool valid = _service.ListUsers().Any(
             u => u.Username==user.Username &&
@@ -185,6 +192,19 @@ public static class Authentication
         );
         if (valid)
         {
+            // [1]: Generate Token
+            string token = _service.GetTocken(user);
+            // [2]: Generate Refresh token
+            Backend.Models.RefreshToken refreshToken = _service.GenerateRefreshToken();
+            // [3]: Response.Cookies.Append("refreshToken", newRefreshToken.Token, cookieOptions);
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = refreshToken.Expires
+            };
+            response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+            // [4]: user.RefreshToken = RefreshToken
+            _service.SetRefreshToken(refreshToken, user);
             return Results.Json(
                 _service.GetTocken(user),
                 statusCode: 200

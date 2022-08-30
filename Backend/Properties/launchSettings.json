@@ -11,7 +11,7 @@
     "backend": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:57500",
+      "applicationUrl": "http://localhost:54646",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
