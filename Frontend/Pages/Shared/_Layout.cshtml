@@ -347,6 +347,10 @@
                         this.sendRecipe.categoriesIds=this.activeRecipe.categoriesIds;
                     },
                     async loginFunc() {
+                        if (this.loginUser.username.trim() == '' || this.loginUser.password.trim() == '') {
+                            this.errMsgs = ["Username and Password can not be empty ..."];
+                            return;
+                        }
                         let response = await fetch(`${this.baseAddress}/login`, {
                             method: 'POST',
                             headers: {
@@ -370,6 +374,10 @@
                         this.open = 'home';
                     },
                     async registerFunc() {
+                        if (this.loginUser.username.trim() == '' || this.loginUser.password.trim() == '') {
+                            this.errMsgs = ["Username and Password can not be empty ..."];
+                            return;
+                        }
                         let response = await fetch(`${this.baseAddress}/register`, {
                             method: 'POST',
                             headers: {
@@ -383,7 +391,7 @@
                                 console.log(message);
                                 throw new Error(message);
                             }
-                            let msgs = await response.json();
+                            let msgs = ["Please Enter Correct Username and Password..."]
                             this.errMsgs = msgs;
                         }
                         this.loginUser = { username: '', password: '' };

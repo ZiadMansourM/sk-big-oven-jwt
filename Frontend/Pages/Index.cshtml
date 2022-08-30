@@ -18,12 +18,18 @@
 </section>
 
 <section x-show="open=='login'" x-cloak id="login">
+    <template x-for="(msg, index) in errMsgs" :key="index">
+        <div class="alert alert-danger-custom shadow p-3 mb-4 bg-body-custom rounded" role="alert">
+            <a x-text="msg" class="btn-alert-cls link" data-bs-toggle="modal" data-bs-target="#recipePolcy">
+            </a>
+        </div>
+    </template>
     <div class="form-signin">
         <form>
             <h1 class="h3 mb-3 fw-normal">Sign In</h1>
-            <div class="form-floating">
-                <input x-model="loginUser.username" type="text" class="form-control" id="floatingInput" placeholder="Enter username">
-                <label for="floatingInput">Username</label>
+            <div class="form-floating pb-2">
+                <input x-model="loginUser.username" type="text" class="form-control" id="floatingInputLogin" placeholder="Enter username">
+                <label for="floatingInputLogin">Username</label>
             </div>
             <div class="form-floating">
                 <input x-model="loginUser.password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
@@ -35,18 +41,24 @@
 </section>
 
 <section x-show="open=='register'" x-cloak id="register">
+    <template x-for="(msg, index) in errMsgs" :key="index">
+        <div class="alert alert-danger-custom shadow p-3 mb-4 bg-body-custom rounded" role="alert">
+            <a x-text="msg" class="btn-alert-cls link" data-bs-toggle="modal" data-bs-target="#recipePolcy">
+            </a>
+        </div>
+    </template>
     <div class="form-signin">
         <form>
             <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
-            <div class="form-floating">
-                <input x-model="loginUser.username" type="text" class="form-control" id="floatingInput" placeholder="Enter username">
-                <label for="floatingInput">Username</label>
+            <div class="form-floating pb-2">
+                <input x-model="loginUser.username" type="text" class="form-control" id="floatingInputRegister" placeholder="Enter username">
+                <label for="floatingInputRegister">Username</label>
             </div>
             <div class="form-floating">
-                <input x-model="loginUser.password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword">Password</label>
+                <input x-model="loginUser.password" type="password" class="form-control" id="floatingPasswordSignin" placeholder="Password">
+                <label for="floatingPasswordSignin">Password</label>
             </div>
-            <button x-on:click="registerFunc" class="w-100 btn btn-lg btn-primary" type="button">Sign in</button>
+            <button x-on:click="registerFunc" class="w-100 btn btn-lg btn-primary" type="button">Sign up</button>
         </form>
     </div>
 </section>
@@ -138,14 +150,14 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput" :value="activeRecipe.name" readonly>
-                                <label for="floatingInput">Recipe Name</label>
+                                <input type="text" class="form-control" id="floatingInputDname" :value="activeRecipe.name" readonly>
+                                <label for="floatingInputDname">Recipe Name</label>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput" :value="activeRecipe.id" readonly>
-                                <label for="floatingInput">Recipe Guid</label>
+                                <input type="text" class="form-control" id="floatingInputDguid" :value="activeRecipe.id" readonly>
+                                <label for="floatingInputDguid">Recipe Guid</label>
                             </div>
                         </div>
                     </div>
@@ -183,14 +195,14 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput" x-model="activeRecipe.name">
-                                <label for="floatingInput">Recipe Name</label>
+                                <input type="text" class="form-control" id="floatingInputUname" x-model="activeRecipe.name">
+                                <label for="floatingInputUname">Recipe Name</label>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput" :value="activeRecipe.id" readonly>
-                                <label for="floatingInput">Recipe Guid</label>
+                                <input type="text" class="form-control" id="floatingInputUguid" :value="activeRecipe.id" readonly>
+                                <label for="floatingInputUguid">Recipe Guid</label>
                             </div>
                         </div>
                     </div>
@@ -234,8 +246,8 @@
                 <div class="modal-body">
                     <div class="col">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" x-model="activeRecipe.name">
-                            <label for="floatingInput">Recipe Name</label>
+                            <input type="text" class="form-control" id="floatingInputCname" x-model="activeRecipe.name">
+                            <label for="floatingInputCname">Recipe Name</label>
                         </div>
                     </div>
                     <div class="form-floating custom-form-floating">
@@ -333,12 +345,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" :value="activeCategory.id" readonly>
-                        <label for="floatingInput">Category Guid</label>
+                        <input type="text" class="form-control" id="floatingInputDrguid" :value="activeCategory.id" readonly>
+                        <label for="floatingInputDrguid">Category Guid</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" :value="activeCategory.name" readonly>
-                        <label for="floatingInput">Category Name</label>
+                        <input type="text" class="form-control" id="floatingInputDrname" :value="activeCategory.name" readonly>
+                        <label for="floatingInputDrname">Category Name</label>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -358,12 +370,12 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" :value="activeCategory.id" readonly>
-                            <label for="floatingInput">Category Guid</label>
+                            <input type="text" class="form-control" id="floatingInputCUguid" :value="activeCategory.id" readonly>
+                            <label for="floatingInputCUguid">Category Guid</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" name="categoryName" class="form-control" x-model="activeCategory.name" id="floatingInput" placeholder="Egyptian Food">
-                            <label for="floatingInput">New Category Name</label>
+                            <input type="text" name="categoryName" class="form-control" x-model="activeCategory.name" id="floatingInputCUname" placeholder="Egyptian Food">
+                            <label for="floatingInputCUname">New Category Name</label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -405,8 +417,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
-                        <input type="text" x-model="activeCategory.name" name="categoryName" class="form-control" id="floatingInput" placeholder="Egyptian Food">
-                        <label for="floatingInput">Category Name</label>
+                        <input type="text" x-model="activeCategory.name" name="categoryName" class="form-control" id="floatingInputCCname" placeholder="Egyptian Food">
+                        <label for="floatingInputCCname">Category Name</label>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -426,8 +438,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
-                        <input type="text" value="Must not be empty." class="form-control" id="floatingInput" placeholder="Egyptian Food" readonly>
-                        <label for="floatingInput">Category Name</label>
+                        <input type="text" value="Must not be empty." class="form-control" id="floatingInputCMname" placeholder="Egyptian Food" readonly>
+                        <label for="floatingInputCMname">Category Name</label>
                     </div>
                 </div>
                 <div class="modal-footer">
