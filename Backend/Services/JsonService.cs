@@ -223,10 +223,10 @@ public class JsonService
     }
 
     // Other
-    public string GetTocken(Backend.Models.UserDTO user)
+    public string GetTocken(string username)
     {
         List<Claim> claims = new List<Claim> {
-            new Claim(ClaimTypes.Name, user.Username)
+            new Claim(ClaimTypes.Name, username)
         };
 
         // SECRET_KEY will be stored safely later
@@ -260,10 +260,10 @@ public class JsonService
         return refreshToken;
     }
 
-    public void SetRefreshToken(RefreshToken newRefreshToken, UserDTO userInfo)
+    public void SetRefreshToken(RefreshToken newRefreshToken, string username)
     {
         User user = ListUsers().Where(
-            u => u.Username == userInfo.Username
+            u => u.Username == username
         ).First();
         user.RefreshToken = newRefreshToken.Token;
         user.TokenCreated = newRefreshToken.Created;

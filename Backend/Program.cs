@@ -139,9 +139,47 @@ public static class Authentication
         return Results.Json(_service.GetUser(id), statusCode: 200);
     }
 
-    private static IResult UserRefreshToken(Guid id)
+    private static IResult UserRefreshToken(Guid id, Microsoft.AspNetCore.Http.HttpRequest request, Microsoft.AspNetCore.Http.HttpResponse response)
     {
-        return Results.Json(_service.GetUser(id), statusCode: 200);
+        var refreshToken = request.Cookies["refreshToken"];
+        bool valid = _service.ListUsers().Any(u => u.Id == id);
+        if (valid)
+        {
+            var user = _service.ListUsers().Where(u => u.Id == id).First();
+            if (!user.RefreshToken.Equals(refreshToken))
+                return Results.Json("Invalid Refresh Token.", statusCode: 401);
+            else if (user.TokenExpires < DateTime.Now)
+                return Results.Json("Token expired.", statusCode: 401);
+            // [1]: Generate Token
+            string token = _service.GetTocken(user.Username);
+            // [2]: Generate Refresh token
+            Backend.Models.RefreshToken newrefreshToken = _service.GenerateRefreshToken();
+            // [3]: Response.Cookies.Append("refreshToken", newRefreshToken.Token, cookieOptions);
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = newrefreshToken.Expires
+            };
+            response.Cookies.Append("refreshToken", newrefreshToken.Token, cookieOptions);
+            // [4]: user.RefreshToken = RefreshToken
+            _service.SetRefreshToken(newrefreshToken, user.Username);
+            return Results.Json(
+                token,
+                statusCode: 200
+            );
+        }
+        else
+        {
+            List<string> msgs = new();
+            msgs.Add(
+                $"Invalid Refresh token!"
+            );
+            return Results.Json(
+                msgs,
+                statusCode: 400
+            );
+        }
+        //return Results.Json(_service.GetUser(id), statusCode: 200);
     }
 
     private static IResult RegisterUser([FromBody] Backend.Models.UserDTO user)
@@ -193,7 +231,7 @@ public static class Authentication
         if (valid)
         {
             // [1]: Generate Token
-            string token = _service.GetTocken(user);
+            string token = _service.GetTocken(user.Username);
             // [2]: Generate Refresh token
             Backend.Models.RefreshToken refreshToken = _service.GenerateRefreshToken();
             // [3]: Response.Cookies.Append("refreshToken", newRefreshToken.Token, cookieOptions);
@@ -204,9 +242,9 @@ public static class Authentication
             };
             response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
             // [4]: user.RefreshToken = RefreshToken
-            _service.SetRefreshToken(refreshToken, user);
+            _service.SetRefreshToken(refreshToken, user.Username);
             return Results.Json(
-                _service.GetTocken(user),
+                token,
                 statusCode: 200
             );
         }
