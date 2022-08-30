@@ -55,40 +55,62 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a 
-                            class="nav-link"
-                            x-on:click="open='home'; errMsgs=[]"
-                            x-bind:class="open=='home'?'active':''"
-                        >
+                        <a class="nav-link"
+                           x-on:click="open='home'; errMsgs=[]"
+                           x-bind:class="open=='home'?'active':''">
                             Home
                         </a>
                     </li>
+                    <template x-if="loged">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               x-on:click="open='recipes'; errMsgs=[]"
+                               x-bind:class="open=='recipes'?'active':''">
+                                Recipes
+                            </a>
+                        </li>
+                    </template>
+                    <template x-if="loged">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               x-on:click="open='categories'; errMsgs=[]"
+                               x-bind:class="open=='categories'?'active':''">
+                                Categories
+                            </a>
+                        </li>
+                    </template>
+                    <template x-if="!loged">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               x-on:click="open='login'; errMsgs=[]"
+                               x-bind:class="open=='login'?'active':''">
+                                Login
+                            </a>
+                        </li>
+                    </template>
+                    <template x-if="!loged">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               x-on:click="open='register'; errMsgs=[]"
+                               x-bind:class="open=='register'?'active':''">
+                                Signup
+                            </a>
+                        </li>
+                    </template>
                     <li class="nav-item">
-                        <a 
-                            class="nav-link"
-                            x-on:click="open='recipes'; errMsgs=[]"
-                            x-bind:class="open=='recipes'?'active':''"
-                        >
-                            Recipes
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a 
-                            class="nav-link"
-                            x-on:click="open='categories'; errMsgs=[]"
-                            x-bind:class="open=='categories'?'active':''"
-                        >
-                            Categories
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a 
-                            class="nav-link active font-weight-bold"
-                            href="https://skbigoven.azurewebsites.net/api/swagger"
-                        >
+                        <a class="nav-link font-weight-bold"
+                           href="https://skbigoven.azurewebsites.net/api/swagger">
                             API
                         </a>
                     </li>
+                    <template x-if="loged">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               x-on:click="open='home'; token=''; loged=false; errMsgs=[];">
+                                Logout
+                            </a>
+                        </li>
+                    </template>
                 </ul>
             </div>
         </nav>
@@ -104,8 +126,10 @@
             function state() {
                 return {
                     baseAddress: '@Program.config["BaseAddress"]',
+                    loged: false,
                     open: 'home',
                     errMsgs: [],
+                    loginUser: { username: '', password: '' },
                     categories: [],
                     activeCategory: { id: '', name: '' },
                     recipes: [],
@@ -117,7 +141,7 @@
                     sendRecipe: { id: '', name: '', ingredients: "", instructions: "", categoriesIds: [] },
                     catNameGuid: {},
                     catGuidName: {},
-                    token: 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3RyaW5nIiwiZXhwIjoxNjYxNzg4OTU2fQ.T6dxTlBbLpVirUJQE0p0kkKzQ2QIuxDi6Zb3ZL7NQgH-OO9z_Y_yn2x6n8Gw6nkWwe3GXFr2SaDVdNFNxy8ZCg',
+                    token: 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiemlhZCIsImV4cCI6MTY2MTkxMTE5NX0.uBNP_qNTEvp2hu8brf3HjGSZATsRPjiEp2UrVtaingLiScWyD3cxo_8JRXGmsop1BcvMQsZLByG5gOGtmE621w',
                     async loadCategories() {
                         let response = await fetch(`${this.baseAddress}/categories`, {
                             headers: {
@@ -321,6 +345,49 @@
                         this.sendRecipe.ingredients=this.activeRecipe.ingredients;
                         this.sendRecipe.instructions=this.activeRecipe.instructions;
                         this.sendRecipe.categoriesIds=this.activeRecipe.categoriesIds;
+                    },
+                    async loginFunc() {
+                        let response = await fetch(`${this.baseAddress}/login`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(this.loginUser)
+                        });
+                        if (!response.ok) {
+                            if (response.status != 400) {
+                                const message = `An error has occured: ${response.status}`;
+                                console.log(message);
+                                throw new Error(message);
+                            }
+                            let msgs = await response.json();
+                            this.errMsgs = msgs;
+                        }
+                        let token = await response.json();
+                        this.token = token;
+                        this.loginUser = { username: '', password: '' };
+                        this.loged = true;
+                        this.open = 'home';
+                    },
+                    async registerFunc() {
+                        let response = await fetch(`${this.baseAddress}/register`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(this.loginUser)
+                        });
+                        if (!response.ok) {
+                            if (response.status != 400) {
+                                const message = `An error has occured: ${response.status}`;
+                                console.log(message);
+                                throw new Error(message);
+                            }
+                            let msgs = await response.json();
+                            this.errMsgs = msgs;
+                        }
+                        this.loginUser = { username: '', password: '' };
+                        this.open = 'login';
                     }
                 }
             }

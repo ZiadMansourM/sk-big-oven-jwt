@@ -17,6 +17,40 @@
     </p>
 </section>
 
+<section x-show="open=='login'" x-cloak id="login">
+    <div class="form-signin">
+        <form>
+            <h1 class="h3 mb-3 fw-normal">Sign In</h1>
+            <div class="form-floating">
+                <input x-model="loginUser.username" type="text" class="form-control" id="floatingInput" placeholder="Enter username">
+                <label for="floatingInput">Username</label>
+            </div>
+            <div class="form-floating">
+                <input x-model="loginUser.password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+            </div>
+            <button x-on:click="loginFunc" class="w-100 btn btn-lg btn-primary" type="button">Sign in</button>
+        </form>
+    </div>
+</section>
+
+<section x-show="open=='register'" x-cloak id="register">
+    <div class="form-signin">
+        <form>
+            <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
+            <div class="form-floating">
+                <input x-model="loginUser.username" type="text" class="form-control" id="floatingInput" placeholder="Enter username">
+                <label for="floatingInput">Username</label>
+            </div>
+            <div class="form-floating">
+                <input x-model="loginUser.password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+            </div>
+            <button x-on:click="registerFunc" class="w-100 btn btn-lg btn-primary" type="button">Sign in</button>
+        </form>
+    </div>
+</section>
+
 <section x-show="open=='recipes'" x-cloak id="recipes">
     <template x-for="(msg, index) in errMsgs" :key="index">
         <div class="alert alert-danger-custom shadow p-3 mb-4 bg-body-custom rounded" role="alert">
