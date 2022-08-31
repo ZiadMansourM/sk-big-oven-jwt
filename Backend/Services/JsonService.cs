@@ -242,7 +242,7 @@ public class JsonService
 
         var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
             claims: claims,
-            expires: DateTime.Now.AddDays(1),
+            expires: DateTime.Now.AddMinutes(3),
             signingCredentials: creds
         );
 
