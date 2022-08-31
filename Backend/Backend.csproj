@@ -32,4 +32,7 @@
     <Folder Include="Services\" />
     <Folder Include="Models\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Users.json" />
+  </ItemGroup>
 </Project>

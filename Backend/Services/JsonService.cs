@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Xml.Linq;
 using Backend.Models;
 
 namespace Backend.Services;
@@ -265,9 +266,12 @@ public class JsonService
         User user = ListUsers().Where(
             u => u.Username == username
         ).First();
+        List<User> users = ListUsers().FindAll(u => u.Username != username);
         user.RefreshToken = newRefreshToken.Token;
         user.TokenCreated = newRefreshToken.Created;
         user.TokenExpires = newRefreshToken.Expires;
         // OverWrite
+        users.Add(user);
+        OverWriteUsers(users);
     }
 }
