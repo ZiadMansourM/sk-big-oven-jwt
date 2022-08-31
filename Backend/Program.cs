@@ -231,6 +231,9 @@ public static class Authentication
         );
         if (valid)
         {
+            var logedUser = _service.ListUsers().Where(
+            u => u.Username == user.Username &&
+            u.VerifyPassword(user.Password)).First();
             // [1]: Generate Token
             string token = _service.GetTocken(user.Username);
             // [2]: Generate Refresh token
@@ -244,8 +247,12 @@ public static class Authentication
             response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
             // [4]: user.RefreshToken = RefreshToken
             _service.SetRefreshToken(refreshToken, user.Username);
+            Dictionary<string, string> dict = new Dictionary<string, string> {
+                { "token", token },
+                { "id", logedUser.Id.ToString() }
+            };
             return Results.Json(
-                token,
+                dict,
                 statusCode: 200
             );
         }
