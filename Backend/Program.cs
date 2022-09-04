@@ -236,7 +236,6 @@ public static class Authentication
         );
         if (valid)
         {
-            // [1]: Generate Token
             string token = _service.GetTocken(user.Username);
             // [2]: Generate Refresh token
             Backend.Models.RefreshToken refreshToken = _service.GenerateRefreshToken();

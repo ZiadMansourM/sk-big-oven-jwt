@@ -25,17 +25,18 @@
         </div>
     </template>
     <div class="form-signin">
-        <form>
+        <form x-on:submit.prevent="loginFunc">
             <h1 class="h3 mb-3 fw-normal">Sign In</h1>
             <div class="form-floating pb-2">
-                <input x-model="activeUser.username" type="text" class="form-control" id="floatingInputLogin" placeholder="Enter username">
+                <input x-model="activeUser.username" type="text" class="form-control" id="floatingInputLogin" placeholder="Enter username" required>
                 <label for="floatingInputLogin">Username</label>
             </div>
             <div class="form-floating">
-                <input x-model="activeUser.password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <input x-model="activeUser.password" type="password" class="form-control" id="floatingPassword" placeholder="Password" required>
                 <label for="floatingPassword">Password</label>
             </div>
-            <button x-on:click="loginFunc" class="w-100 btn btn-lg btn-primary" type="button">Sign in</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Sign in</button>
+
         </form>
     </div>
 </section>
@@ -48,17 +49,17 @@
         </div>
     </template>
     <div class="form-signin">
-        <form>
+        <form x-on:submit.prevent="registerFunc">
             <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
             <div class="form-floating pb-2">
-                <input x-model="activeUser.username" type="text" class="form-control" id="floatingInputRegister" placeholder="Enter username">
+                <input x-model="activeUser.username" type="text" class="form-control" id="floatingInputRegister" placeholder="Enter username" required>
                 <label for="floatingInputRegister">Username</label>
             </div>
             <div class="form-floating">
-                <input x-model="activeUser.password" type="password" class="form-control" id="floatingPasswordSignin" placeholder="Password">
+                <input x-model="activeUser.password" type="password" class="form-control" id="floatingPasswordSignin" placeholder="Password" required>
                 <label for="floatingPasswordSignin">Password</label>
             </div>
-            <button x-on:click="registerFunc" class="w-100 btn btn-lg btn-primary" type="button">Sign up</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Sign up</button>
         </form>
     </div>
 </section>
@@ -187,51 +188,51 @@
     <div class="modal fade custom-model" id="updateRecipeModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateRecipeModel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateRecipeModel">Recipe Update</h5>
-                    <button type="button" x-on:click="cleanActiveRecipe" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInputUname" x-model="activeRecipe.name">
-                                <label for="floatingInputUname">Recipe Name</label>
+                <form x-on:submit.prevent="updateRecipe(); $('#updateRecipeModel').modal('hide');">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateRecipeModel">Recipe Update</h5>
+                        <button type="button" x-on:click="cleanActiveRecipe" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="floatingInputUname" x-model="activeRecipe.name" required>
+                                    <label for="floatingInputUname">Recipe Name</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="floatingInputUguid" :value="activeRecipe.id" readonly>
+                                    <label for="floatingInputUguid">Recipe Guid</label>
+                                </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInputUguid" :value="activeRecipe.id" readonly>
-                                <label for="floatingInputUguid">Recipe Guid</label>
+                        <div class="form-floating custom-form-floating">
+                            <textarea class="form-control h-100" x-model="activeRecipe.ingredients" :rows="activeRecipe.ingredientsLength" id="floatingTextarea2" required>
+                            </textarea>
+                            <label for="floatingTextarea2">Ingredients</label>
+                        </div>
+                        <div class="form-floating custom-form-floating">
+                            <textarea class="form-control h-100" x-model="activeRecipe.instructions" :rows="activeRecipe.instructionsLength" id="floatingTextarea2" required>
+                            </textarea>
+                            <label for="floatingTextarea2">Instructions</label>
+                        </div>
+                        <template x-for="cat in categories">
+                            <div class="form-check form-switch text-start">
+                                <input class="form-check-input"
+                                       x-model="activeRecipe.categoriesIds"
+                                       :value="cat.id"
+                                       type="checkbox">
+                                <label class="form-check-label" x-text="cat.name"></label>
                             </div>
-                        </div>
+                        </template>
                     </div>
-                    <div class="form-floating custom-form-floating">
-                        <textarea class="form-control h-100" x-model="activeRecipe.ingredients" :rows="activeRecipe.ingredientsLength" id="floatingTextarea2">
-                        </textarea>
-                        <label for="floatingTextarea2">Ingredients</label>
+                    <div class="modal-footer">
+                        <button x-on:click="cleanActiveRecipe" type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success fw-bold border-white">Update</button>
                     </div>
-                    <div class="form-floating custom-form-floating">
-                        <textarea class="form-control h-100" x-model="activeRecipe.instructions" :rows="activeRecipe.instructionsLength" id="floatingTextarea2">
-                        </textarea>
-                        <label for="floatingTextarea2">Instructions</label>
-                    </div>
-                    <template x-for="cat in categories">
-                        <div class="form-check form-switch text-start">
-                            <input 
-                                class="form-check-input" 
-                                x-model="activeRecipe.categoriesIds"
-                                :value="cat.id"
-                                type="checkbox"
-                            >
-                            <label class="form-check-label" x-text="cat.name"></label>
-                        </div>
-                    </template>
-                </div>
-                <div class="modal-footer">
-                    <button x-on:click="cleanActiveRecipe" type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
-                    <button x-on:click="updateRecipe" data-bs-dismiss="modal" type="button" class="btn btn-success fw-bold border-white">Update</button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -239,43 +240,43 @@
     <div class="modal fade custom-model" id="createRecipeModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createRecipeModel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createRecipeModel">Recipe Create</h5>
-                    <button type="button" x-on:click="cleanActiveRecipe" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="col">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInputCname" x-model="activeRecipe.name">
-                            <label for="floatingInputCname">Recipe Name</label>
+                <form x-on:submit.prevent="createRecipe(); $('#createRecipeModel').modal('hide');">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createRecipeModel">Recipe Create</h5>
+                        <button type="button" x-on:click="cleanActiveRecipe" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInputCname" x-model="activeRecipe.name" required>
+                                <label for="floatingInputCname">Recipe Name</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-floating custom-form-floating">
-                        <textarea class="form-control h-100" x-model="activeRecipe.ingredients" :rows="activeRecipe.ingredientsLength" id="floatingTextarea2">
-                        </textarea>
-                        <label for="floatingTextarea2">Ingredients</label>
-                    </div>
-                    <div class="form-floating custom-form-floating">
-                        <textarea class="form-control h-100" x-model="activeRecipe.instructions" :rows="activeRecipe.instructionsLength" id="floatingTextarea2">
-                        </textarea>
-                        <label for="floatingTextarea2">Instructions</label>
-                    </div>
-                    <template x-for="cat in categories">
-                        <div class="form-check form-switch text-start">
-                            <input 
-                                class="form-check-input" 
-                                x-model="activeRecipe.categoriesIds"
-                                :value="cat.id"
-                                type="checkbox"
-                            >
-                            <label class="form-check-label" x-text="cat.name"></label>
+                        <div class="form-floating custom-form-floating">
+                            <textarea class="form-control h-100" x-model="activeRecipe.ingredients" :rows="activeRecipe.ingredientsLength" id="floatingTextarea2" required>
+                            </textarea>
+                            <label for="floatingTextarea2">Ingredients</label>
                         </div>
-                    </template>
-                </div>
-                <div class="modal-footer">
-                    <button x-on:click="cleanActiveRecipe" type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
-                    <button x-on:click="createRecipe" data-bs-dismiss="modal" type="button" class="btn btn-success fw-bold border-white">Create</button>
-                </div>
+                        <div class="form-floating custom-form-floating">
+                            <textarea class="form-control h-100" x-model="activeRecipe.instructions" :rows="activeRecipe.instructionsLength" id="floatingTextarea2" required>
+                            </textarea>
+                            <label for="floatingTextarea2">Instructions</label>
+                        </div>
+                        <template x-for="cat in categories">
+                            <div class="form-check form-switch text-start">
+                                <input class="form-check-input"
+                                       x-model="activeRecipe.categoriesIds"
+                                       :value="cat.id"
+                                       type="checkbox">
+                                <label class="form-check-label" x-text="cat.name"></label>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="modal-footer">
+                        <button x-on:click="cleanActiveRecipe" type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success fw-bold border-white">Create</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -363,7 +364,7 @@
     <div class="modal fade custom-model" id="updateCategoryModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateCategoryModel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form asp-page-handler="update" method="post">
+                <form x-on:submit.prevent="updateCategory(); $('#updateCategoryModel').modal('hide');">
                     <div class="modal-header">
                         <h5 class="modal-title" id="updateCategoryModel">Update Category</h5>
                         <button x-on:click="cleanActiveCategory" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -374,13 +375,13 @@
                             <label for="floatingInputCUguid">Category Guid</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" name="categoryName" class="form-control" x-model="activeCategory.name" id="floatingInputCUname" placeholder="Egyptian Food">
+                            <input type="text" name="categoryName" class="form-control" x-model="activeCategory.name" id="floatingInputCUname" placeholder="Egyptian Food" required>
                             <label for="floatingInputCUname">New Category Name</label>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button x-on:click="cleanActiveCategory" type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
-                        <button x-on:click="updateCategory" data-bs-dismiss="modal" type="button" class="btn btn-success fw-bold border-white">Update</button>
+                        <button type="submit" class="btn btn-success fw-bold border-white">Update</button>
                     </div>
                 </form>
             </div>
@@ -411,20 +412,22 @@
     <div class="modal fade custom-model" id="createCategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createCategoryLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createCategoryLabel">Create Category</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-floating mb-3">
-                        <input type="text" x-model="activeCategory.name" name="categoryName" class="form-control" id="floatingInputCCname" placeholder="Egyptian Food">
-                        <label for="floatingInputCCname">Category Name</label>
+                <form x-on:submit.prevent="createCategories(); $('#createCategory').modal('hide');">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createCategoryLabel">Create Category</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
-                    <button type="button" x-on:click="createCategories" data-bs-dismiss="modal" class="btn btn-success fw-bold border-white">Create</button>
-                </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input type="text" x-model="activeCategory.name" name="categoryName" class="form-control" id="floatingInputCCname" placeholder="Egyptian Food" required>
+                            <label for="floatingInputCCname">Category Name</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary fw-bold border-white bg-white" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success fw-bold border-white">Create</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
