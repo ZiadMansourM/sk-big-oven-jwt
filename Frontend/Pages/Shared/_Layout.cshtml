@@ -43,7 +43,7 @@
     <div 
         class="container d-flex flex-column min-vh-100 p-3"
         x-data="state()"
-        x-init="loadCategories(); loadRecipes();"
+        x-init="loadInit()"
     >
         <nav class="navbar navbar-expand-md navbar-dark">
             <div class="col text-start">
@@ -106,7 +106,7 @@
                     <template x-if="loged">
                         <li class="nav-item">
                             <a class="nav-link"
-                               x-on:click="open='home'; token=''; loged=false; errMsgs=[];">
+                               x-on:click="logOut()">
                                 Logout
                             </a>
                         </li>
@@ -141,7 +141,15 @@
                     sendRecipe: { id: '', name: '', ingredients: "", instructions: "", categoriesIds: [] },
                     catNameGuid: {},
                     catGuidName: {},
-                    token: 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiemlhZCIsImV4cCI6MTY2MTkxMTE5NX0.uBNP_qNTEvp2hu8brf3HjGSZATsRPjiEp2UrVtaingLiScWyD3cxo_8JRXGmsop1BcvMQsZLByG5gOGtmE621w',
+                    token: '',
+                    loadInit() {
+                        if (localStorage.hasOwnProperty('token')) {
+                            this.loged = true;
+                            this.token = localStorage.getItem('token');
+                            this.loadCategories();
+                            this.loadRecipes();
+                        }
+                    },
                     async checkToken() {
                         if (JSON.parse(window.atob(this.token.split('.')[1])).exp < Date.now() / 1000) {
                             let response = await fetch(`${this.baseAddress}/refresh?id=${this.activeUser.id}`, {
@@ -390,8 +398,8 @@
                             this.errMsgs = msgs;
                         }
                         let res = await response.json();
-                        console.log(res);
                         this.token = res.token;
+                        localStorage.setItem('token', this.token);
                         this.activeUser = { id: res.id, username: '', password: '' };
                         this.loged = true;
                         this.open = 'home';
@@ -421,6 +429,13 @@
                         }
                         this.activeUser = { username: '', password: '' };
                         this.open = 'login';
+                    },
+                    logOut() {
+                        this.open = 'home';
+                        this.token = '';
+                        this.loged = false;
+                        this.errMsgs = [];
+                        localStorage.removeItem('token');
                     }
                 }
             }
