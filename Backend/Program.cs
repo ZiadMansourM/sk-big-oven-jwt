@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 // ConfigureServices
@@ -225,15 +226,16 @@ public static class Authentication
 
     private static IResult UserLogin([FromBody] Backend.Models.UserDTO user, Microsoft.AspNetCore.Http.HttpResponse response)
     {
+        var logedUser = _service.ListUsers().Where(
+            u => u.Username == user.Username).First();
         bool valid = _service.ListUsers().Any(
             u => u.Username==user.Username &&
-            u.VerifyPassword(user.Password)
+            (new PasswordHasher<User>())
+            .VerifyHashedPassword(logedUser, logedUser.PasswordHash, user.Password)
+            .Equals(PasswordVerificationResult.Success)
         );
         if (valid)
         {
-            var logedUser = _service.ListUsers().Where(
-            u => u.Username == user.Username &&
-            u.VerifyPassword(user.Password)).First();
             // [1]: Generate Token
             string token = _service.GetTocken(user.Username);
             // [2]: Generate Refresh token

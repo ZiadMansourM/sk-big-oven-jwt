@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using System.Xml.Linq;
 using Backend.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Backend.Services;
 
@@ -154,7 +155,8 @@ public class JsonService
     public Backend.Models.User Register(Backend.Models.UserDTO user)
     {
         Models.User newUser = new Models.User();
-        newUser.Register(user.Username, user.Password);
+        newUser.Username = user.Username;
+        newUser.PasswordHash = (new PasswordHasher<User>()).HashPassword(newUser, user.Password);
         return SaveUser(newUser);
     }
 
@@ -182,16 +184,16 @@ public class JsonService
         return recipe;
     }
 
-    public Models.User UpdateUser(Guid id, string username, string password)
-    {
-        var users = ListUsers().FindAll(r => r.Id != id);
-        var user = ListUsers().Where(r => r.Id == id).First();
-        user.Username = username;
-        user.UpdatePassword(password);
-        users.Add(user);
-        OverWriteUsers(users);
-        return user;
-    }
+    //public Models.User UpdateUser(Guid id, string username, string password)
+    //{
+    //    var users = ListUsers().FindAll(r => r.Id != id);
+    //    var user = ListUsers().Where(r => r.Id == id).First();
+    //    user.Username = username;
+    //    user.UpdatePassword(password);
+    //    users.Add(user);
+    //    OverWriteUsers(users);
+    //    return user;
+    //}
 
     // Delete
     public void DeleteCategory(Guid id)
